@@ -72,21 +72,56 @@ public class DeepDarkPortalBlock extends Block {
         if (!world.isClient && !entity.hasVehicle() && !entity.hasPassengers() && entity.canUsePortals()) {
             if (world instanceof ServerWorld serverWorld) {
                 ServerWorld destination;
+                BlockPos destinationPos;
                 
                 // Als we in de Overworld zijn, ga naar Deep Dark
                 if (world.getRegistryKey() == World.OVERWORLD) {
                     destination = serverWorld.getServer().getWorld(ModDimension.DEEP_DARK_WORLD);
+                    // Spawn op een veilige hoogte in Deep Dark (y=64)
+                    destinationPos = new BlockPos(pos.getX(), 64, pos.getZ());
                 } 
                 // Als we in Deep Dark zijn, ga terug naar Overworld
                 else if (world.getRegistryKey() == ModDimension.DEEP_DARK_WORLD) {
                     destination = serverWorld.getServer().getWorld(World.OVERWORLD);
+                    // Zoek een veilige plek in de Overworld
+                    destinationPos = findSafeSpawnPos(destination, pos);
                 } else {
                     return;
                 }
 
                 if (destination != null) {
-                    entity.moveToWorld(destination);
+                    // Maak een platform op de spawn locatie
+                    createSpawnPlatform(destination, destinationPos);
+                    
+                    // Teleporteer de entity
+                    entity.teleport(destination, destinationPos.getX() + 0.5, destinationPos.getY() + 1, destinationPos.getZ() + 0.5, entity.getYaw(), entity.getPitch());
                 }
+            }
+        }
+    }
+
+    private BlockPos findSafeSpawnPos(ServerWorld world, BlockPos originalPos) {
+        // Zoek vanaf y=128 naar beneden voor een veilige plek
+        for (int y = 128; y > -64; y--) {
+            BlockPos testPos = new BlockPos(originalPos.getX(), y, originalPos.getZ());
+            if (world.getBlockState(testPos).isSolidBlock(world, testPos)) {
+                return testPos.up();
+            }
+        }
+        return new BlockPos(originalPos.getX(), 64, originalPos.getZ());
+    }
+
+    private void createSpawnPlatform(ServerWorld world, BlockPos center) {
+        // Maak een 3x3 platform van deepslate
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                BlockPos platformPos = center.add(x, 0, z);
+                world.setBlockState(platformPos, net.minecraft.block.Blocks.DEEPSLATE.getDefaultState());
+                
+                // Clear de blokken erboven zodat je niet vast zit
+                world.setBlockState(platformPos.up(), net.minecraft.block.Blocks.AIR.getDefaultState());
+                world.setBlockState(platformPos.up(2), net.minecraft.block.Blocks.AIR.getDefaultState());
+                world.setBlockState(platformPos.up(3), net.minecraft.block.Blocks.AIR.getDefaultState());
             }
         }
     }
