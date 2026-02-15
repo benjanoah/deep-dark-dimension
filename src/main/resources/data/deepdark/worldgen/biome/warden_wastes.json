@@ -35,7 +35,12 @@
 		"water_ambient": [],
 		"misc": []
 	},
-	"spawn_costs": {},
+	"spawn_costs": {
+		"minecraft:warden": {
+			"energy_budget": 0.15,
+			"charge": 0.7
+		}
+	},
 	"carvers": {},
 	"features": []
 }
