@@ -1,7 +1,0 @@
-Plaats je portal texture hier!
-
-Bestandsnaam: deep_dark_portal.png
-Formaat: PNG
-Afmetingen: 16x16 pixels (of groter als je wilt)
-
-Dit is voor het portal block zelf (de blauwe glowing portal)
