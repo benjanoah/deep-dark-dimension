@@ -1,5 +1,6 @@
 package com.benjamin.deepdark;
 
+import com.benjamin.deepdark.item.SculkShardItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
@@ -11,7 +12,7 @@ import net.minecraft.util.Identifier;
 public class ModItems {
 	// Sculk Shard - voor het activeren van de portal
 	public static final Item SCULK_SHARD = registerItem("sculk_shard",
-			new Item(new FabricItemSettings().maxCount(64)));
+			new SculkShardItem(new FabricItemSettings().maxCount(64)));
 
 	private static Item registerItem(String name, Item item) {
 		return Registry.register(Registries.ITEM, new Identifier(DeepDarkMod.MOD_ID, name), item);
