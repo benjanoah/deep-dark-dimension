@@ -30,16 +30,14 @@
     "initial_density_without_jaggedness": {
       "type": "minecraft:add",
       "argument1": {
-        "type": "minecraft:cache_2d",
-        "argument": {
-          "type": "minecraft:flat_cache",
-          "argument": {
-            "type": "minecraft:noise",
-            "noise": "minecraft:jagged",
-            "xz_scale": 1500,
-            "y_scale": 0
-          }
-        }
+        "type": "minecraft:mul",
+        "argument1": {
+          "type": "minecraft:noise",
+          "noise": "minecraft:jagged",
+          "xz_scale": 0.05,
+          "y_scale": 0
+        },
+        "argument2": 0.2
       },
       "argument2": {
         "type": "minecraft:mul",
@@ -58,18 +56,12 @@
       "argument1": {
         "type": "minecraft:mul",
         "argument1": {
-          "type": "minecraft:cache_2d",
-          "argument": {
-            "type": "minecraft:flat_cache",
-            "argument": {
-              "type": "minecraft:noise",
-              "noise": "minecraft:jagged",
-              "xz_scale": 1500,
-              "y_scale": 0
-            }
-          }
+          "type": "minecraft:noise",
+          "noise": "minecraft:jagged",
+          "xz_scale": 0.05,
+          "y_scale": 0
         },
-        "argument2": 0.15
+        "argument2": 0.2
       },
       "argument2": {
         "type": "minecraft:mul",
