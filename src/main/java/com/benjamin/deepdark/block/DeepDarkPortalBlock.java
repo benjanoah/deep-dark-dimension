@@ -77,8 +77,8 @@ public class DeepDarkPortalBlock extends Block {
                 // Als we in de Overworld zijn, ga naar Deep Dark
                 if (world.getRegistryKey() == World.OVERWORLD) {
                     destination = serverWorld.getServer().getWorld(ModDimension.DEEP_DARK_WORLD);
-                    // Spawn op een veilige hoogte in Deep Dark (y=64)
-                    destinationPos = new BlockPos(pos.getX(), 64, pos.getZ());
+                    // Zoek een veilige plek in Deep Dark (op de grond)
+                    destinationPos = findSafeSpawnPos(destination, pos);
                 } 
                 // Als we in Deep Dark zijn, ga terug naar Overworld
                 else if (world.getRegistryKey() == ModDimension.DEEP_DARK_WORLD) {
@@ -109,44 +109,34 @@ public class DeepDarkPortalBlock extends Block {
     }
 
     private BlockPos findSafeSpawnPos(ServerWorld world, BlockPos originalPos) {
-        // Zoek vanaf y=128 naar beneden voor een veilige plek
-        for (int y = 128; y > -64; y--) {
+        // Zoek vanaf y=320 naar beneden voor een veilige plek (zoals Overworld)
+        for (int y = 320; y > -64; y--) {
             BlockPos testPos = new BlockPos(originalPos.getX(), y, originalPos.getZ());
-            if (world.getBlockState(testPos).isSolidBlock(world, testPos)) {
-                return testPos.up();
+            BlockPos below = testPos.down();
+            
+            // Vind een plek waar we op de grond staan
+            if (world.getBlockState(below).isSolidBlock(world, below) && 
+                world.getBlockState(testPos).isAir() && 
+                world.getBlockState(testPos.up()).isAir()) {
+                return testPos;
             }
         }
-        return new BlockPos(originalPos.getX(), 64, originalPos.getZ());
+        // Als we niks vinden, spawn op y=100
+        return new BlockPos(originalPos.getX(), 100, originalPos.getZ());
     }
 
     private void createSpawnPlatform(ServerWorld world, BlockPos center) {
-        // Maak een 7x7 eiland met sculk!
-        int radius = 3;
-        
-        for (int x = -radius; x <= radius; x++) {
-            for (int z = -radius; z <= radius; z++) {
-                // Cirkel vorm (geen vierkant)
-                double distance = Math.sqrt(x * x + z * z);
-                if (distance <= radius + 0.5) {
-                    BlockPos platformPos = center.add(x, 0, z);
-                    
-                    // Top laag: Sculk Catalyst
-                    world.setBlockState(platformPos, net.minecraft.block.Blocks.SCULK_CATALYST.getDefaultState());
-                    
-                    // 3 lagen daaronder: Sculk
-                    for (int depth = 1; depth <= 3; depth++) {
-                        world.setBlockState(platformPos.down(depth), net.minecraft.block.Blocks.SCULK.getDefaultState());
-                    }
-                    
-                    // Core (dieper): Deepslate
-                    for (int depth = 4; depth <= 8; depth++) {
-                        world.setBlockState(platformPos.down(depth), net.minecraft.block.Blocks.DEEPSLATE.getDefaultState());
-                    }
-                    
-                    // Clear de ruimte erboven
-                    for (int height = 1; height <= 4; height++) {
-                        world.setBlockState(platformPos.up(height), net.minecraft.block.Blocks.AIR.getDefaultState());
-                    }
+        // Maak een klein 3x3 platform voor veilige landing
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                BlockPos platformPos = center.add(x, 0, z);
+                
+                // Zorg dat er sculk catalyst onder ons is
+                world.setBlockState(platformPos, net.minecraft.block.Blocks.SCULK_CATALYST.getDefaultState());
+                
+                // Clear de ruimte erboven zodat je niet vast zit
+                for (int height = 1; height <= 3; height++) {
+                    world.setBlockState(platformPos.up(height), net.minecraft.block.Blocks.AIR.getDefaultState());
                 }
             }
         }
