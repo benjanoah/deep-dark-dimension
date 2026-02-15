@@ -38,7 +38,7 @@
 		[],
 		[],
 		[],
-		["deepdark:sculk_surface"],
+		["deepdark:sculk_surface", "deepdark:sculk_blocks", "deepdark:deepslate_surface"],
 		[],
 		[],
 		[]
