@@ -1,0 +1,7 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"all": "deepdark:block/deep_dark_portal",
+		"particle": "deepdark:block/deep_dark_portal"
+	}
+}
