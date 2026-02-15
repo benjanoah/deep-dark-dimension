@@ -93,8 +93,16 @@ public class DeepDarkPortalBlock extends Block {
                     // Maak een platform op de spawn locatie
                     createSpawnPlatform(destination, destinationPos);
                     
-                    // Teleporteer de entity
-                    entity.teleport(destination, destinationPos.getX() + 0.5, destinationPos.getY() + 1, destinationPos.getZ() + 0.5, entity.getYaw(), entity.getPitch());
+                    // Teleporteer de entity naar de nieuwe dimensie
+                    entity.teleport(
+                        destination,
+                        destinationPos.getX() + 0.5,
+                        destinationPos.getY() + 1.0,
+                        destinationPos.getZ() + 0.5,
+                        java.util.Collections.emptySet(),
+                        entity.getYaw(),
+                        entity.getPitch()
+                    );
                 }
             }
         }
