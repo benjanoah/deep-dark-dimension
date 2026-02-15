@@ -21,26 +21,14 @@
 		}
 	},
 	"spawners": {
-		"monster": [
-			{
-				"type": "minecraft:warden",
-				"weight": 1,
-				"minCount": 1,
-				"maxCount": 1
-			}
-		],
+		"monster": [],
 		"creature": [],
 		"ambient": [],
 		"water_creature": [],
 		"water_ambient": [],
 		"misc": []
 	},
-	"spawn_costs": {
-		"minecraft:warden": {
-			"energy_budget": 0.15,
-			"charge": 0.7
-		}
-	},
+	"spawn_costs": {},
 	"carvers": {},
 	"features": []
 }
