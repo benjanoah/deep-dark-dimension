@@ -30,5 +30,17 @@
 	},
 	"spawn_costs": {},
 	"carvers": {},
-	"features": []
+	"features": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		["deepdark:sculk_surface"],
+		[],
+		[],
+		[]
+	]
 }
