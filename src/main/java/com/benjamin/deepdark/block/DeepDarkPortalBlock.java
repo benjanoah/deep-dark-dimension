@@ -120,16 +120,34 @@ public class DeepDarkPortalBlock extends Block {
     }
 
     private void createSpawnPlatform(ServerWorld world, BlockPos center) {
-        // Maak een 3x3 platform van deepslate
-        for (int x = -1; x <= 1; x++) {
-            for (int z = -1; z <= 1; z++) {
-                BlockPos platformPos = center.add(x, 0, z);
-                world.setBlockState(platformPos, net.minecraft.block.Blocks.DEEPSLATE.getDefaultState());
-                
-                // Clear de blokken erboven zodat je niet vast zit
-                world.setBlockState(platformPos.up(), net.minecraft.block.Blocks.AIR.getDefaultState());
-                world.setBlockState(platformPos.up(2), net.minecraft.block.Blocks.AIR.getDefaultState());
-                world.setBlockState(platformPos.up(3), net.minecraft.block.Blocks.AIR.getDefaultState());
+        // Maak een 7x7 eiland met sculk!
+        int radius = 3;
+        
+        for (int x = -radius; x <= radius; x++) {
+            for (int z = -radius; z <= radius; z++) {
+                // Cirkel vorm (geen vierkant)
+                double distance = Math.sqrt(x * x + z * z);
+                if (distance <= radius + 0.5) {
+                    BlockPos platformPos = center.add(x, 0, z);
+                    
+                    // Top laag: Sculk Catalyst
+                    world.setBlockState(platformPos, net.minecraft.block.Blocks.SCULK_CATALYST.getDefaultState());
+                    
+                    // 3 lagen daaronder: Sculk
+                    for (int depth = 1; depth <= 3; depth++) {
+                        world.setBlockState(platformPos.down(depth), net.minecraft.block.Blocks.SCULK.getDefaultState());
+                    }
+                    
+                    // Core (dieper): Deepslate
+                    for (int depth = 4; depth <= 8; depth++) {
+                        world.setBlockState(platformPos.down(depth), net.minecraft.block.Blocks.DEEPSLATE.getDefaultState());
+                    }
+                    
+                    // Clear de ruimte erboven
+                    for (int height = 1; height <= 4; height++) {
+                        world.setBlockState(platformPos.up(height), net.minecraft.block.Blocks.AIR.getDefaultState());
+                    }
+                }
             }
         }
     }
