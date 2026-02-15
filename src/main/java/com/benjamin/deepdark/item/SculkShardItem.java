@@ -1,6 +1,7 @@
 package com.benjamin.deepdark.item;
 
 import com.benjamin.deepdark.util.DeepDarkPortalIgniter;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
@@ -25,8 +26,13 @@ public class SculkShardItem extends Item {
             return ActionResult.SUCCESS;
         }
 
-        // Probeer de portal aan te steken
-        boolean success = DeepDarkPortalIgniter.tryIgnitePortal(world, pos.offset(context.getSide()));
+        // Check of je op deepslate klikt
+        if (world.getBlockState(pos).getBlock() != Blocks.DEEPSLATE) {
+            return ActionResult.PASS;
+        }
+
+        // Probeer de portal aan te steken vanaf dit deepslate blok
+        boolean success = DeepDarkPortalIgniter.tryIgnitePortal(world, pos);
 
         if (success) {
             // Speel portal ignite sound
@@ -38,12 +44,6 @@ public class SculkShardItem extends Item {
                 1.0F,
                 1.0F
             );
-
-            // Damage het item niet - het is een catalyst, geen consumable
-            // Als je wil dat het slijt, voeg dit toe:
-            // if (player != null && !player.getAbilities().creativeMode) {
-            //     context.getStack().damage(1, player, p -> p.sendToolBreakStatus(context.getHand()));
-            // }
 
             return ActionResult.SUCCESS;
         }
