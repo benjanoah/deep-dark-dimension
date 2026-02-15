@@ -6,6 +6,6 @@
 			"type": "minecraft:fixed",
 			"biome": "deepdark:warden_wastes"
 		},
-		"settings": "minecraft:caves"
+		"settings": "deepdark:deep_dark_settings"
 	}
 }
