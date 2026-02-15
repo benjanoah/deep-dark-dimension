@@ -6,6 +6,6 @@
 			"type": "minecraft:fixed",
 			"biome": "deepdark:warden_wastes"
 		},
-		"settings": "deepdark:deep_dark_settings"
+		"settings": "deepdark:sculk_amplified"
 	}
 }
