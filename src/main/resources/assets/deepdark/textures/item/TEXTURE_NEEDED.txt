@@ -1,0 +1,16 @@
+TEXTURE NODIG VOOR SCULK SHARD!
+
+Maak een 16x16 pixel PNG bestand genaamd "sculk_shard.png" in deze folder.
+
+Ideeën:
+- Turkooizen/cyaan kristal (zoals sculk kleuren)
+- Glowende shards
+- Donker met lichtgevende randen
+
+Je kunt het maken in:
+- Paint.NET (gratis)
+- GIMP (gratis)
+- Aseprite (betaald maar goed voor pixel art)
+- Of gewoon MS Paint als je simpel wil houden!
+
+Tot die tijd gebruikt Minecraft een paarse/zwarte placeholder texture.

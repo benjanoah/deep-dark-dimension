@@ -1,0 +1,28 @@
+{
+	"schemaVersion": 1,
+	"id": "deepdark",
+	"version": "${version}",
+	"name": "Deep Dark Dimension",
+	"description": "Een enge dimensie vol met Wardens en Seekers!",
+	"authors": [
+		"Benjamin"
+	],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/deepdark/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.benjamin.deepdark.DeepDarkMod"
+		]
+	},
+	"mixins": [
+		"deepdark.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.11",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}

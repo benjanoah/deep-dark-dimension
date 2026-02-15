@@ -1,0 +1,11 @@
+{
+	"type": "deepdark:deep_dark_type",
+	"generator": {
+		"type": "minecraft:noise",
+		"biome_source": {
+			"type": "minecraft:fixed",
+			"biome": "deepdark:warden_wastes"
+		},
+		"settings": "minecraft:caves"
+	}
+}
