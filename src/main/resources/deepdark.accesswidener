@@ -1,0 +1,5 @@
+accessWidener	v2	named
+
+# Maak GameRenderer methodes toegankelijk voor de invert glasses shader
+accessible	method	net/minecraft/client/render/GameRenderer	loadPostProcessor	(Lnet/minecraft/util/Identifier;)V
+accessible	method	net/minecraft/client/render/GameRenderer	disablePostProcessor	()V

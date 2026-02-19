@@ -10,6 +10,7 @@
 	"contact": {},
 	"license": "MIT",
 	"icon": "assets/deepdark/icon.png",
+	"accessWidener": "deepdark.accesswidener",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
