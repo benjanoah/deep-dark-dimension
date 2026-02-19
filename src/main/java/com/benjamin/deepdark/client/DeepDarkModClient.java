@@ -8,15 +8,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.*;
 import net.minecraft.entity.EquipmentSlot;
+import org.joml.Matrix4f;
 
 @Environment(EnvType.CLIENT)
 public class DeepDarkModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // Teken een inversie-overlay via de HUD callback
-        // Techniek: wit vlak met ONE_MINUS_DST_COLOR blend = perfecte kleur-inversie!
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.player == null) return;
@@ -30,19 +30,33 @@ public class DeepDarkModClient implements ClientModInitializer {
             int width = client.getWindow().getScaledWidth();
             int height = client.getWindow().getScaledHeight();
 
-            // Zet blend mode: resultaat = 1.0 - huidige_kleur (= inversie!)
+            // Eerst alle uitgestelde HUD renders flushen (deferred draw queue)
+            ((VertexConsumerProvider.Immediate) drawContext.getVertexConsumers()).draw();
+
+            // Zet color inversion blend mode:
+            // result_rgb = src * (1 - dst) = 1.0 * (1 - huidige_kleur) = geïnverteerde kleur
+            RenderSystem.enableBlend();
             RenderSystem.blendFuncSeparate(
                     GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR,
                     GlStateManager.DstFactor.ZERO,
                     GlStateManager.SrcFactor.ZERO,
                     GlStateManager.DstFactor.ONE
             );
+            RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 
-            // Teken wit vlak over het hele scherm → alle kleuren worden geïnverteerd
-            drawContext.fill(0, 0, width, height, 0xFFFFFFFF);
+            // Directe (niet-uitgestelde) rendering via Tessellator
+            Matrix4f matrix = drawContext.getMatrices().peek().getPositionMatrix();
+            BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+            buffer.vertex(matrix, 0,     0,      0).color(1f, 1f, 1f, 1f).next();
+            buffer.vertex(matrix, 0,     height, 0).color(1f, 1f, 1f, 1f).next();
+            buffer.vertex(matrix, width, height, 0).color(1f, 1f, 1f, 1f).next();
+            buffer.vertex(matrix, width, 0,      0).color(1f, 1f, 1f, 1f).next();
+            BufferRenderer.drawWithGlobalProgram(buffer.end());
 
-            // Herstel normale blend mode
+            // Herstel blend state
             RenderSystem.defaultBlendFunc();
+            RenderSystem.disableBlend();
         });
     }
 }
