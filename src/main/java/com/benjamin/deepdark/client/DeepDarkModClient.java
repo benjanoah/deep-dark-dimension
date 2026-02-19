@@ -28,11 +28,18 @@ public class DeepDarkModClient implements ClientModInitializer {
 
             if (wearingGlasses && !shaderActive) {
                 // Bril op → activeer invert shader
-                client.gameRenderer.loadPostProcessor(INVERT_SHADER);
-                shaderActive = true;
+                try {
+                    client.gameRenderer.loadPostProcessor(INVERT_SHADER);
+                    System.out.println("[InvertGlasses] Shader geladen: " + INVERT_SHADER);
+                    shaderActive = true;
+                } catch (Exception e) {
+                    System.err.println("[InvertGlasses] FOUT bij laden shader: " + e.getMessage());
+                    e.printStackTrace();
+                }
             } else if (!wearingGlasses && shaderActive) {
                 // Bril af → deactiveer shader
                 client.gameRenderer.disablePostProcessor();
+                System.out.println("[InvertGlasses] Shader uitgeschakeld.");
                 shaderActive = false;
             }
         });
