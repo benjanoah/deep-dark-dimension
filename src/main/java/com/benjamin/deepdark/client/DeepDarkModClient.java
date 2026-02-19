@@ -1,6 +1,7 @@
 package com.benjamin.deepdark.client;
 
-import com.benjamin.deepdark.ModItems;
+import com.benjamin.deepdark.item.InvertGlassesItem;
+import com.benjamin.deepdark.mixin.GameRendererAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,8 +16,6 @@ public class DeepDarkModClient implements ClientModInitializer {
     private static final Identifier INVERT_SHADER =
             new Identifier("deepdark", "shaders/post/invert.json");
 
-    private static boolean shaderActive = false;
-
     @Override
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -24,23 +23,25 @@ public class DeepDarkModClient implements ClientModInitializer {
 
             // Check of de speler de Invert Glasses draagt
             ItemStack helmet = client.player.getEquippedStack(EquipmentSlot.HEAD);
-            boolean wearingGlasses = helmet.getItem() == ModItems.INVERT_GLASSES;
+            boolean wearingGlasses = helmet.getItem() instanceof InvertGlassesItem;
 
-            if (wearingGlasses && !shaderActive) {
-                // Bril op → activeer invert shader
+            // Lees wat er nu IN de GameRenderer zit (via mixin accessor)
+            boolean shaderCurrentlyActive = ((GameRendererAccessor) client.gameRenderer)
+                    .getPostProcessor() != null;
+
+            if (wearingGlasses && !shaderCurrentlyActive) {
+                // Bril op maar shader is weg (of nog niet geladen) → laad hem
                 try {
                     client.gameRenderer.loadPostProcessor(INVERT_SHADER);
-                    System.out.println("[InvertGlasses] Shader geladen: " + INVERT_SHADER);
-                    shaderActive = true;
+                    System.out.println("[InvertGlasses] Shader geladen!");
                 } catch (Exception e) {
-                    System.err.println("[InvertGlasses] FOUT bij laden shader: " + e.getMessage());
+                    System.err.println("[InvertGlasses] FOUT: " + e.getMessage());
                     e.printStackTrace();
                 }
-            } else if (!wearingGlasses && shaderActive) {
-                // Bril af → deactiveer shader
+            } else if (!wearingGlasses && shaderCurrentlyActive) {
+                // Bril af maar shader is nog actief → uitzetten
                 client.gameRenderer.disablePostProcessor();
                 System.out.println("[InvertGlasses] Shader uitgeschakeld.");
-                shaderActive = false;
             }
         });
     }
