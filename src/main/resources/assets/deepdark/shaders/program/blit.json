@@ -4,8 +4,8 @@
         "srcrgb": "one",
         "dstrgb": "zero"
     },
-    "vertex": "invert",
-    "fragment": "invert",
+    "vertex": "blit",
+    "fragment": "blit",
     "attributes": [
         "Position"
     ],

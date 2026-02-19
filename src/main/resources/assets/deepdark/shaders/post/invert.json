@@ -4,13 +4,13 @@
     ],
     "passes": [
         {
-            "name": "deepdark:invert",
+            "name": "invert",
             "intarget": "minecraft:main",
             "outtarget": "swap",
             "uniforms": []
         },
         {
-            "name": "minecraft:blit",
+            "name": "blit",
             "intarget": "swap",
             "outtarget": "minecraft:main",
             "uniforms": []
